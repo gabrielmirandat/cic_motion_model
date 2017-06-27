@@ -1,5 +1,6 @@
 #include <MotionModel.h>
 #include <math.h>
+#include <ctime>
 
 MotionModel::MotionModel()
 {
@@ -15,7 +16,22 @@ void MotionModel::sample_motion_model_odometry(Control u, Eigen::Vector3f state)
 
 
 
+}
 
+double MotionModel::sample(double b)
+{
+    srand(time(NULL));
+    double sample_value;
+    for(int i = 0; i < 12; ++i)
+        sample_value += (-1) + (static_cast<double>(rand()) / RAND_MAX) * (1 - (-1));
+
+    return sample_value/b;
+}
+
+double fRand(double fMin, double fMax)
+{
+    double f = static_cast<double>(rand()) / RAND_MAX;
+    return fMin + f * (fMax - fMin);
 }
 
 int main()

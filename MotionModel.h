@@ -12,7 +12,7 @@ class Control;
 class MotionModel
 {
 private:
-
+    double sample(double b);
 public:
     MotionModel();
     void sample_motion_model_odometry(Control u, Eigen::Vector3f state);
