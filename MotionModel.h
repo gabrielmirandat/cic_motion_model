@@ -38,9 +38,9 @@ public:
         u_t_ << x_bar_tm1, x_bar_t;
     }
 
-    Eigen::VectorXf getVec(){return u_t_;}
-    float getXtm1(int index) {return u_t_[index];}
-    float getXt(int index) {return u_t_[index+3];}
+    Eigen::VectorXd getVec(){return u_t_;}
+    double getXtm1(int index) {return static_cast<double>(u_t_[index]);}
+    double getXt(int index) {return static_cast<double>(u_t_[index+3]);}
 
     void set(int index, float value) {u_t_[index] = value;}
 
