@@ -4,10 +4,10 @@
 
 MotionModel::MotionModel()
 {
-    alpha1_ = 0.0;
-    alpha2_ = 0.0;
-    alpha3_ = 0.0;
-    alpha4_ = 0.0;
+    alpha1_ = 0.1;
+    alpha2_ = 0.1;
+    alpha3_ = 0.1;
+    alpha4_ = 0.1;
 }
 
 // in
@@ -53,8 +53,19 @@ int main()
     MotionModel mm;
     Control u;
     Eigen::Vector3d state(0.0,0.0,0.0);
+    Eigen::VectorXd control(6);
 
-    mm.sample_motion_model_odometry(u, state);
+
+    Eigen::Vector3d new_control, old_control;
+    old_control = Eigen::Vector3d(0.,0.,0.);
+    new_control = Eigen::Vector3d(0.1,0.,0.);
+
+    control << old_control, new_control;
+    u.set(control);
+
+    u.print();
+
+    std::cout << mm.sample_motion_model_odometry(u, state) << std::endl;
 
     return 0;
 }

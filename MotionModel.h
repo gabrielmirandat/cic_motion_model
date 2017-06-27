@@ -43,6 +43,8 @@ public:
     double getXt(int index) {return static_cast<double>(u_t_[index+3]);}
 
     void set(int index, float value) {u_t_[index] = value;}
+    // void set(double* control_vector) { for}
+    void set(Eigen::VectorXd control_vector) {u_t_ = control_vector;}
 
     void print()
     {
