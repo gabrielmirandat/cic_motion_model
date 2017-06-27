@@ -22,9 +22,9 @@ Eigen::Vector3d MotionModel::sample_motion_model_odometry(Control u, Eigen::Vect
     double delta_rot_2 = u.getXt(2) - u.getXtm1(2) - delta_rot_1;
 
 
-    double delta_rot_1_cor = delta_rot_1 - sample(alpha1_*fabs(delta_rot_1) + alpha2_*delta_trans);
-    double delta_trans_cor = delta_trans - sample(alpha3_*delta_trans + alpha4_*(fabs(delta_rot_1) + fabs(delta_rot_2)));
-    double delta_rot_2_cor = delta_rot_2 - sample(alpha1_*fabs(delta_rot_2) + alpha2_*delta_trans);
+    double delta_rot_1_corr = delta_rot_1 - sample(alpha1_*fabs(delta_rot_1) + alpha2_*delta_trans);
+    double delta_trans_corr = delta_trans - sample(alpha3_*delta_trans + alpha4_*(fabs(delta_rot_1) + fabs(delta_rot_2)));
+    double delta_rot_2_corr = delta_rot_2 - sample(alpha1_*fabs(delta_rot_2) + alpha2_*delta_trans);
 
     Eigen::Vector3d newstate;
     newstate[0] = state[0] + delta_trans_corr * cos (state[2] + delta_rot_1_corr);
