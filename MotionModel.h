@@ -13,6 +13,8 @@ class MotionModel
 {
 private:
     double alpha1_, alpha2_, alpha3_, alpha4_;
+
+    double sample(double b);
 public:
     MotionModel();
     Eigen::Vector3d sample_motion_model_odometry(Control u, Eigen::Vector3d state);
