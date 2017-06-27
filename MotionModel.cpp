@@ -10,6 +10,7 @@ MotionModel::MotionModel()
 // pose x_tm1
 void MotionModel::sample_motion_model_odometry(Control u, Eigen::Vector3f state)
 {
+    u.print();
     float delta_rot_1 = atan2(u.getXt(1) - u.getXtm1(1),u.getXt(0) - u.getXtm1(0)) - u.getXtm1(2);
 
 
