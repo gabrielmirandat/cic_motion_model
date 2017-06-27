@@ -7,15 +7,15 @@
 
 using namespace std;
 
-
+class Control;
 
 class MotionModel
 {
 private:
-    void sample_motion_model_odometry(Control u, Eigen::Vector3f state);
 
 public:
     MotionModel();
+    void sample_motion_model_odometry(Control u, Eigen::Vector3f state);
 };
 
 class Control

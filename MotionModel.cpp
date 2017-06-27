@@ -3,7 +3,6 @@
 
 MotionModel::MotionModel()
 {
-    cout << "hello" << endl;
 }
 
 // in
