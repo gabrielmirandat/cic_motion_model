@@ -12,25 +12,25 @@ class Control;
 class MotionModel
 {
 private:
-
+    double alpha1_, alpha2_, alpha3_, alpha4_;
 public:
     MotionModel();
-    void sample_motion_model_odometry(Control u, Eigen::Vector3f state);
+    Eigen::Vector3d sample_motion_model_odometry(Control u, Eigen::Vector3d state);
 };
 
 class Control
 {
 private:
-    Eigen::VectorXf u_t_;
-    // Eigen::VectorXf u_t_T_;
+    Eigen::VectorXd u_t_;
+    // Eigen::VectorXd u_t_T_;
 
 public:
     Control()
     : u_t_(6)
     {
         // u_t_ = (x_bar_tm1_ x_bar_t_)T
-        Eigen::Vector3f x_bar_tm1(0.0,0.0,0.0);
-        Eigen::Vector3f x_bar_t(0.0,0.0,0.0);
+        Eigen::Vector3d x_bar_tm1(0.0,0.0,0.0);
+        Eigen::Vector3d x_bar_t(0.0,0.0,0.0);
 
         // concatenate the two vectors
         u_t_ << x_bar_tm1, x_bar_t;
