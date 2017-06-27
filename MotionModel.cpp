@@ -37,17 +37,11 @@ Eigen::Vector3d MotionModel::sample_motion_model_odometry(Control u, Eigen::Vect
 double MotionModel::sample(double b)
 {
     srand(time(NULL));
-    double sample_value = 0;
+    double sample_value = 0 ;
     for(int i = 0; i < 12; ++i)
         sample_value += (-1) + (static_cast<double>(rand()) / RAND_MAX) * (1 - (-1));
 
     return sample_value/b;
-}
-
-double fRand(double fMin, double fMax)
-{
-    double f = static_cast<double>(rand()) / RAND_MAX;
-    return fMin + f * (fMax - fMin);
 }
 
 int main()
