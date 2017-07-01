@@ -5,6 +5,12 @@
 #include <opencv2/core/core.hpp>
 #include <Eigen/Dense>
 
+#include <random>
+#include <chrono>
+#include <thread>
+#include <boost/tuple/tuple.hpp>
+#include "gnuplot-iostream-master/gnuplot-iostream.h"
+
 using namespace std;
 
 class Control;
@@ -13,7 +19,8 @@ class MotionModel
 {
 private:
     double alpha1_, alpha2_, alpha3_, alpha4_;
-
+    double seed_;
+    default_random_engine generator_;
     double sample(double b);
 public:
     MotionModel();
