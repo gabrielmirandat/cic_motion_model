@@ -106,7 +106,8 @@ int main()
     std::this_thread::sleep_for(std::chrono::milliseconds(200));
     
     // escolhi arbitrariamente 30 iteracoes
-    for (int iter = 1; iter < 31; ++iter) {
+    for (int iter = 1; iter < 31; ++iter)
+    {
         
         // essa parte gera uma sequencia de odometria de acordo c a figura 5.10 do livro
         Eigen::Vector3d new_control, old_control;
