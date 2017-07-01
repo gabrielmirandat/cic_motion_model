@@ -4,10 +4,10 @@
 
 MotionModel::MotionModel()
 {
-    alpha1_ = 0.1;
-    alpha2_ = 0.1;
-    alpha3_ = 0.1;
-    alpha4_ = 0.1;
+    alpha1_ = 0.01; // translational error
+    alpha2_ = 0.01; // translational error
+    alpha3_ = 0.01; // angular error
+    alpha4_ = 0.01; // angular error
 }
 
 // in
@@ -15,7 +15,7 @@ MotionModel::MotionModel()
 // pose x_tm1
 Eigen::Vector3d MotionModel::sample_motion_model_odometry(Control u, Eigen::Vector3d state)
 {
-    u.print();
+    // u.print();
     double delta_rot_1 = atan2(u.getXt(1) - u.getXtm1(1),u.getXt(0) - u.getXtm1(0)) - u.getXtm1(2);
     double delta_trans = sqrt((u.getXtm1(0) - u.getXt(0))*(u.getXtm1(0) - u.getXt(0))
                            + (u.getXtm1(1) - u.getXt(1))*(u.getXtm1(1) - u.getXt(1)));
@@ -46,26 +46,27 @@ double MotionModel::sample(double b)
 
 int main()
 {
-    // u.print();
-    // u.set(3,2.0);
-    // u.print();
-
     MotionModel mm;
     Control u;
-    Eigen::Vector3d state(0.0,0.0,0.0);
+    Eigen::Vector3d state(10.0,
+                          10.0,
+                          0.785398 /*45º*/);
     Eigen::VectorXd control(6);
-
-
     Eigen::Vector3d new_control, old_control;
-    old_control = Eigen::Vector3d(0.,0.,0.);
-    new_control = Eigen::Vector3d(0.1,0.,0.);
 
-    control << old_control, new_control;
-    u.set(control);
+    old_control = Eigen::Vector3d(0.1,
+                                  0.1,
+                                  0.0174533 /*1º*/);
 
-    u.print();
+    new_control = Eigen::Vector3d(0.1,
+                                  0.1,
+                                  0.0174533 /*1º*/);
 
-    std::cout << mm.sample_motion_model_odometry(u, state) << std::endl;
+     control << old_control, new_control;
+     u.set(control);
+     u.print();
+
+     std::cout << mm.sample_motion_model_odometry(u, state) << std::endl;
 
     return 0;
 }
