@@ -50,7 +50,7 @@ public:
     {
         Eigen::IOFormat CleanFmt(4, 0, ", ", "\n", "[", "]");
         cout << "u_t_= [" << u_t_.rows() << "," << u_t_.cols() << "]" << endl;
-        cout << u_t_.format(CleanFmt) << endl;
+        cout << u_t_.format(CleanFmt) << "\n" << endl;
     }
 
 };

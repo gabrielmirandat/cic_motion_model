@@ -15,7 +15,10 @@ MotionModel::MotionModel()
 // pose x_tm1
 Eigen::Vector3d MotionModel::sample_motion_model_odometry(Control u, Eigen::Vector3d state)
 {
-    // u.print();
+    // cout << sample(1.0) << endl;
+    // cout << sample(0.5) << endl;
+    // cout << sample(0.02) << endl;
+
     double delta_rot_1 = atan2(u.getXt(1) - u.getXtm1(1),u.getXt(0) - u.getXtm1(0)) - u.getXtm1(2);
     double delta_trans = sqrt((u.getXtm1(0) - u.getXt(0))*(u.getXtm1(0) - u.getXt(0))
                            + (u.getXtm1(1) - u.getXt(1))*(u.getXtm1(1) - u.getXt(1)));
@@ -36,23 +39,29 @@ Eigen::Vector3d MotionModel::sample_motion_model_odometry(Control u, Eigen::Vect
 
 double MotionModel::sample(double b)
 {
+    assert(b>0.0);
     srand(time(NULL));
-    double sample_value = 0 ;
-    for(int i = 0; i < 12; ++i)
-        sample_value += (-1) + (static_cast<double>(rand()) / RAND_MAX) * (1 - (-1));
-
-    return sample_value/b;
+    double sample_value = 0.0;
+    for(int i=0; i < 12; i++)
+    {
+      double f = (double)rand() / RAND_MAX;
+      sample_value += (-1)*b + f * (b - (-1)*b);
+    }
+    return sample_value/2;
 }
 
 int main()
 {
     MotionModel mm;
     Control u;
-    Eigen::Vector3d state(10.0,
-                          10.0,
-                          0.785398 /*45º*/);
+
+    Eigen::Vector3d state, new_state;
     Eigen::VectorXd control(6);
     Eigen::Vector3d new_control, old_control;
+
+    state =       Eigen::Vector3d(10.0,
+                                  10.0,
+                                  0.785398 /*45º*/);
 
     old_control = Eigen::Vector3d(0.1,
                                   0.1,
@@ -62,11 +71,18 @@ int main()
                                   0.1,
                                   0.0174533 /*1º*/);
 
-     control << old_control, new_control;
-     u.set(control);
-     u.print();
+    control << old_control, new_control;
+    u.set(control);
 
-     std::cout << mm.sample_motion_model_odometry(u, state) << std::endl;
+    cout << "INITIAL_STATE" << endl;
+    cout << state << "\n" << endl;
+
+    cout << "CONTROL" << endl;
+    u.print();
+
+    new_state = mm.sample_motion_model_odometry(u, state);
+    cout << "NEW_STATE" << endl;
+    cout << new_state << endl;
 
     return 0;
 }
