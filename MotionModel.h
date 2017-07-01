@@ -9,7 +9,7 @@
 #include <chrono>
 #include <thread>
 #include <boost/tuple/tuple.hpp>
-#include "gnuplot-iostream-master/gnuplot-iostream.h"
+#include "gnuplot-iostream.h"
 
 using namespace std;
 

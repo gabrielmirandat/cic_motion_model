@@ -2,3 +2,4 @@
 Makefile
 *.o
 project
+project.pro.user
