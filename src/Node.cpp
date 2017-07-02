@@ -1,7 +1,7 @@
 #include "Node.h"
 
 Node::Node(ros::NodeHandle nh)
-: nh_(nh)
+: first_time_(true), nh_(nh)
 {
     odom_sub_ = nh_.subscribe("pose", 10, &Node::odomCallback, this);
 }
@@ -21,13 +21,26 @@ void Node::spin()
         ros::spinOnce();
 
         // algorithm();
-        double x = pose_msg_.pose.pose.position.x;
-        double y = pose_msg_.pose.pose.position.y;
-        double theta = tf::getYaw(pose_msg_.pose.pose.orientation);
-        theta = RAD2DEGREE(theta);
+        // double x = pose_msg_.pose.pose.position.x;
+        // double y = pose_msg_.pose.pose.position.y;
+        // double theta = tf::getYaw(pose_msg_.pose.pose.orientation);
+        // theta = RAD2DEGREE(theta);
 
-        std::cout << x << ";" << y << ";" << theta << std::endl;
+        if(first_time_)
+        {
+            mm_.setOldControl(pose_msg_.pose.pose.position.x,
+                              pose_msg_.pose.pose.position.y,
+                              tf::getYaw(pose_msg_.pose.pose.orientation));
+            first_time_ = false;
+        }
+        else
+        {
+            mm_.updateControl(pose_msg_.pose.pose.position.x,
+                              pose_msg_.pose.pose.position.y,
+                              tf::getYaw(pose_msg_.pose.pose.orientation));
+        }
 
+        mm_.run();
         loop_rate.sleep();
     }
 }

@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(cic_motion_model)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+SET(GCC_COVERAGE_LINK_FLAGS    "-lboost_iostreams")
 
 find_package(cmake_modules REQUIRED)
 find_package(OpenCV REQUIRED)
@@ -9,6 +10,8 @@ find_package(Eigen REQUIRED)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   std_msgs
+  geometry_msgs
+  sensor_msgs
   p2os_msgs
   tf
 )

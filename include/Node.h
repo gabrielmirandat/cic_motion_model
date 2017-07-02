@@ -7,12 +7,17 @@
 #include <tf/tf.h>
 #include <tf/transform_datatypes.h>
 
+#include <MotionModel.h>
+
 #define POSANGLE(a) (((a) > 0.0)? (a) : ((a) + 360.0))
 #define RAD2DEGREE(a) (POSANGLE((a)*180.0/M_PI))
 
 class Node
 {
 private:
+    bool first_time_;
+    MotionModel mm_;
+
     ros::NodeHandle nh_;
     ros::Subscriber odom_sub_;
 
