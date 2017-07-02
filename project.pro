@@ -4,14 +4,14 @@
 
 OBJECTS_DIR= generated_files #Intermediate object files directory
 MOC_DIR    = generated_files #Intermediate moc files directory
-INCLUDEPATH = include                  \
-              /opt/ros/indigo/include  \
-              /usr/include/eigen3      \
-              gnuplot-iostream-master
+INCLUDEPATH += include                  \
+               /opt/ros/indigo/include  \
+               /usr/include/eigen3      \
+               gnuplot-iostream-master
 DEPENDPATH = include
 
 QMAKE_CXXFLAGS += -std=c++11
-CONFIG -= app_bundle qt
+CONFIG -= app_bundle
 
 HEADERS +=  include/MotionModel.h \
             include/Node.h
@@ -19,6 +19,8 @@ HEADERS +=  include/MotionModel.h \
 
 SOURCES +=  src/MotionModel.cpp  \
             src/Node.cpp \
-            main.cpp
+            src/main.cpp
 
 LIBS    += -lopencv_core -lboost_iostreams -lboost_system -lboost_filesystem
+
+QMAKE_LFLAGS += -c

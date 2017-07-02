@@ -73,83 +73,83 @@ double MotionModel::sample(double b)
     return errorDist(generator_);
 }
 
-int main()
-{
-    MotionModel mm;
-    Control u;
+//int main()
+//{
+//    MotionModel mm;
+//    Control u;
 
-    Eigen::Vector3d state, new_state;
-    Eigen::VectorXd control(6);
+//    Eigen::Vector3d state, new_state;
+//    Eigen::VectorXd control(6);
     
-    // numero de particulas
-    int M = 1000;
+//    // numero de particulas
+//    int M = 1000;
     
-    // conjuntos de particulas representado os estados passado e atual
-    vector<Eigen::Vector3d> psXtm1 (M);
-    vector<Eigen::Vector3d> psXt (M);
+//    // conjuntos de particulas representado os estados passado e atual
+//    vector<Eigen::Vector3d> psXtm1 (M);
+//    vector<Eigen::Vector3d> psXt (M);
     
-    // gnuplot
-    Gnuplot gp;
-    // vetores de dados que o gnuplot reconhece
-    std::vector<double> filter_data_x (M),
-        filter_data_y (M);
-    // configura o plot
-    gp << "set xrange [-50:50]\n"
-    "set yrange [-50:50]\n"
-    "set style fill transparent solid 0.1 noborder\n"
-    "set style circle radius 0.1\n"
-    "set title 'Location'\n";
-    // faz o plot
-    gp << "plot '-' with circles lc rgb 'black'\n";
-    gp.send1d(boost::make_tuple(filter_data_x, filter_data_y));
-    // espera 200ms (no ROS isso ja acontece)
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+//    // gnuplot
+//    Gnuplot gp;
+//    // vetores de dados que o gnuplot reconhece
+//    std::vector<double> filter_data_x (M),
+//        filter_data_y (M);
+//    // configura o plot
+//    gp << "set xrange [-50:50]\n"
+//    "set yrange [-50:50]\n"
+//    "set style fill transparent solid 0.1 noborder\n"
+//    "set style circle radius 0.1\n"
+//    "set title 'Location'\n";
+//    // faz o plot
+//    gp << "plot '-' with circles lc rgb 'black'\n";
+//    gp.send1d(boost::make_tuple(filter_data_x, filter_data_y));
+//    // espera 200ms (no ROS isso ja acontece)
+//    std::this_thread::sleep_for(std::chrono::milliseconds(200));
     
-    // escolhi arbitrariamente 30 iteracoes
-    for (int iter = 1; iter < 31; ++iter)
-    {
+//    // escolhi arbitrariamente 30 iteracoes
+//    for (int iter = 1; iter < 31; ++iter)
+//    {
         
-        // essa parte gera uma sequencia de odometria de acordo c a figura 5.10 do livro
-        Eigen::Vector3d new_control, old_control;
-        if (iter < 11) {
-            old_control = Eigen::Vector3d(2.0*(iter-1),0.,0.);
-            if (iter < 10) new_control = Eigen::Vector3d(2.0*iter,0.,0.);
-            else new_control = Eigen::Vector3d(20.0,0.,M_PI/2.0);
-        } else if (iter < 21) {
-            old_control = Eigen::Vector3d(20.0,2.0*(iter-11),M_PI/2.0);
-            if (iter < 20) new_control = Eigen::Vector3d(20.0,2.0*(iter-10),M_PI/2.0);
-            else new_control = Eigen::Vector3d(20.0,20.0,-M_PI);
-        } else if (iter < 31) {
-            old_control = Eigen::Vector3d(20.0-2.0*(iter-21),20.0,-M_PI);
-            new_control = Eigen::Vector3d(20.0-2.0*(iter-20),20.0,-M_PI);
-        }
+//        // essa parte gera uma sequencia de odometria de acordo c a figura 5.10 do livro
+//        Eigen::Vector3d new_control, old_control;
+//        if (iter < 11) {
+//            old_control = Eigen::Vector3d(2.0*(iter-1),0.,0.);
+//            if (iter < 10) new_control = Eigen::Vector3d(2.0*iter,0.,0.);
+//            else new_control = Eigen::Vector3d(20.0,0.,M_PI/2.0);
+//        } else if (iter < 21) {
+//            old_control = Eigen::Vector3d(20.0,2.0*(iter-11),M_PI/2.0);
+//            if (iter < 20) new_control = Eigen::Vector3d(20.0,2.0*(iter-10),M_PI/2.0);
+//            else new_control = Eigen::Vector3d(20.0,20.0,-M_PI);
+//        } else if (iter < 31) {
+//            old_control = Eigen::Vector3d(20.0-2.0*(iter-21),20.0,-M_PI);
+//            new_control = Eigen::Vector3d(20.0-2.0*(iter-20),20.0,-M_PI);
+//        }
         
-        control << old_control, new_control;
-        u.set(control);
-        u.print();
+//        control << old_control, new_control;
+//        u.set(control);
+//        u.print();
         
-        // constroi o novo conjunto de particulas
-        for (int m = 0; m < M; ++m) {
-            // particula antiga
-            state = psXtm1[m];
-            // sorteia nova particula de acordo c o algoritmo que fizemos
-            Eigen::Vector3d new_state = mm.sample_motion_model_odometry(u, state);
-            // guarda a nova particula
-            psXt[m] = new_state;
-            // atualiza os dados para o gnuplot
-            filter_data_x[m] = new_state[0];
-            filter_data_y[m] = new_state[1];
-        }
+//        // constroi o novo conjunto de particulas
+//        for (int m = 0; m < M; ++m) {
+//            // particula antiga
+//            state = psXtm1[m];
+//            // sorteia nova particula de acordo c o algoritmo que fizemos
+//            Eigen::Vector3d new_state = mm.sample_motion_model_odometry(u, state);
+//            // guarda a nova particula
+//            psXt[m] = new_state;
+//            // atualiza os dados para o gnuplot
+//            filter_data_x[m] = new_state[0];
+//            filter_data_y[m] = new_state[1];
+//        }
         
-        // plota de novo os dados com o gnuplot e espera 200ms
-        gp << "plot '-' with circles lc rgb 'black'\n";
-        gp.send1d(boost::make_tuple(filter_data_x, filter_data_y));
-        std::this_thread::sleep_for(std::chrono::milliseconds(200));
+//        // plota de novo os dados com o gnuplot e espera 200ms
+//        gp << "plot '-' with circles lc rgb 'black'\n";
+//        gp.send1d(boost::make_tuple(filter_data_x, filter_data_y));
+//        std::this_thread::sleep_for(std::chrono::milliseconds(200));
         
-        // agora o estado atual vai ser o novo estado passado
-        psXtm1 = psXt;
+//        // agora o estado atual vai ser o novo estado passado
+//        psXtm1 = psXt;
         
-    }
+//    }
 
-    return 0;
-}
+//    return 0;
+//}
