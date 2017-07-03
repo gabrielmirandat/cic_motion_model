@@ -28,10 +28,14 @@ void Node::spin()
 
         if(first_time_)
         {
-            mm_.setOldControl(pose_msg_.pose.pose.position.x,
+            mm_.setOldControl(0,
+                              0,
+                              0);
+             mm_.updateControl(pose_msg_.pose.pose.position.x,
                               pose_msg_.pose.pose.position.y,
                               tf::getYaw(pose_msg_.pose.pose.orientation));
             first_time_ = false;
+            continue;
         }
         else
         {

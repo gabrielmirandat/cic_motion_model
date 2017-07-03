@@ -5,11 +5,14 @@
 MotionModel::MotionModel()
 : psXtm1_ (NUM_PARTICLES), psXt_ (NUM_PARTICLES)
 {
-    alpha1_ = 0.01; // translational error
-    alpha2_ = 0.01; // translational error
-    alpha3_ = 0.01; // angular error
-    alpha4_ = 0.01; // angular error
-    
+    alpha1_ = 0.05; // translational error
+    alpha2_ = 0.05; // translational error
+    alpha3_ = 0.05; // angular error
+    alpha4_ = 0.05; // angular error
+
+    old_control_ << 0,0,0;
+    new_control_ << 0,0,0;
+
     // seed e gerador usados nas funções de probabilidade do c++11
     seed_ = chrono::system_clock::now().time_since_epoch().count();
     default_random_engine generator (seed_);
@@ -17,7 +20,7 @@ MotionModel::MotionModel()
 }
 
 // corrige o angulo, trazendo de volta p faixa [-pi, pi)
-double truncAngle (double theta) {
+inline double truncAngle (double theta) {
     if (theta >= M_PI)
         return (theta - 2.0*M_PI);
     else if (theta < -M_PI)
@@ -27,6 +30,7 @@ double truncAngle (double theta) {
 
 void MotionModel::sample_motion_model_odometry()
 {
+    // std::cout << "sample_motion_model_odometry" << std::endl;
     double delta_rot_1 = atan2(control_.getXt(1) - control_.getXtm1(1),control_.getXt(0)
                                - control_.getXtm1(0)) - control_.getXtm1(2);
     double delta_trans = sqrt((control_.getXtm1(0) - control_.getXt(0))
@@ -34,7 +38,10 @@ void MotionModel::sample_motion_model_odometry()
                                + (control_.getXtm1(1) - control_.getXt(1))
                                *(control_.getXtm1(1) - control_.getXt(1)));
     double delta_rot_2 = control_.getXt(2) - control_.getXtm1(2) - delta_rot_1;
-    
+
+    if(isnan(delta_rot_1) or isnan(delta_trans) or isnan(delta_rot_2))
+        return;
+
     // traz os angulos para a faixa [-pi, pi) radianos, caso estejam fora
     delta_rot_1 = truncAngle (delta_rot_1);
     delta_rot_2 = truncAngle (delta_rot_2);
@@ -43,9 +50,10 @@ void MotionModel::sample_motion_model_odometry()
     double delta_trans_corr = delta_trans - sample(alpha3_*delta_trans + alpha4_*(fabs(delta_rot_1) + fabs(delta_rot_2)));
     double delta_rot_2_corr = delta_rot_2 - sample(alpha1_*fabs(delta_rot_2) + alpha2_*delta_trans);
 
-    new_state_[0] = state_[0] + delta_trans_corr * cos (state_[2] + delta_rot_1_corr);
-    new_state_[1] = state_[1] + delta_trans_corr * sin (state_[2] + delta_rot_1_corr);
-    new_state_[2] = truncAngle (state_[2] + delta_rot_1_corr + delta_rot_2_corr);
+    new_state_(0) = state_(0) + delta_trans_corr * cos (state_(2) + delta_rot_1_corr);
+    new_state_(1) = state_(1) + delta_trans_corr * sin (state_(2) + delta_rot_1_corr);
+    new_state_(2) = truncAngle (state_(2) + delta_rot_1_corr + delta_rot_2_corr);
+    // std::cout << "new_state_1 " << new_state_ << std::endl;
     
 }
 
@@ -58,18 +66,18 @@ double MotionModel::sample(double b)
 
 void MotionModel::setOldControl(double x, double y, double ori)
 {
-    old_control_[0] = x;
-    old_control_[1] = y;
-    old_control_[2] = ori;
+    old_control_(0) = x;
+    old_control_(1) = y;
+    old_control_(2) = ori;
 }
 
 void MotionModel::updateControl(double x, double y, double ori)
 {
     old_control_ = new_control_;
 
-    new_control_[0] = x;
-    new_control_[1] = y;
-    new_control_[2] = ori;
+    new_control_(0) = x;
+    new_control_(1) = y;
+    new_control_(2) = ori;
 
 }
 
@@ -91,8 +99,9 @@ void MotionModel::run()
         // guarda a nova particula
         psXt_[m] = new_state_;
         // atualiza os dados para o gnuplot
-        viz_.setDataX(m, new_state_[0]);
-        viz_.setDataY(m, new_state_[1]);
+        viz_.setDataX(m, new_state_(0));
+        viz_.setDataY(m, new_state_(1));
+        // std::cout << "new_state_2 " << new_state_ << std::endl;
     }
 
     viz_.showPlot();
