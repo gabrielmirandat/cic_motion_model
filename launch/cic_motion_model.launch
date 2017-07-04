@@ -1,0 +1,7 @@
+<launch>
+    <arg name="config_file" default="$(find cic_motion_model)/config/params.yaml"/>
+    <node name="cic_motion_model" pkg="cic_motion_model" type="cic_motion_model_node" >
+        <rosparam file="$(arg config_file)" command="load"/>
+    </node>
+    <!-- <node name="rviz" pkg="rviz" type="rviz" args="-d $(find cic_motion_model)/launch/camera.rviz"/> -->
+</launch>

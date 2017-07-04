@@ -5,10 +5,10 @@
 MotionModel::MotionModel()
 : psXtm1_ (NUM_PARTICLES), psXt_ (NUM_PARTICLES)
 {
-    alpha1_ = 0.05; // translational error
-    alpha2_ = 0.05; // translational error
-    alpha3_ = 0.05; // angular error
-    alpha4_ = 0.05; // angular error
+    alpha1_ = 0.01; // angular error
+    alpha2_ = 0.01; // translational error
+    alpha3_ = 0.01; // translational error
+    alpha4_ = 0.01; // angular error
 
     old_control_ << 0,0,0;
     new_control_ << 0,0,0;
@@ -26,6 +26,14 @@ inline double truncAngle (double theta) {
     else if (theta < -M_PI)
         return (theta + 2*M_PI);
     else return theta;
+}
+
+void MotionModel::setAlpha(double alpha1, double alpha2, double alpha3, double alpha4)
+{
+    alpha1_ = alpha1; // angular error
+    alpha2_ = alpha2; // translational error
+    alpha3_ = alpha3; // translational error
+    alpha4_ = alpha4; // angular error
 }
 
 void MotionModel::sample_motion_model_odometry()

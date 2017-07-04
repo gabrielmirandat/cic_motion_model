@@ -1,9 +1,16 @@
 #include "Node.h"
 
 Node::Node(ros::NodeHandle nh)
-: first_time_(true), nh_(nh)
+: first_time_(true), nh_(nh), pnh_("~")
 {
+    double alpha1, alpha2, alpha3, alpha4;
     odom_sub_ = nh_.subscribe("pose", 10, &Node::odomCallback, this);
+    pnh_.param("alpha1", alpha1, 0.01);
+    pnh_.param("alpha2", alpha2, 0.01);
+    pnh_.param("alpha3", alpha3, 0.01);
+    pnh_.param("alpha4", alpha4, 0.01);
+
+    mm_.setAlpha(alpha1, alpha2, alpha3, alpha4);
 }
 
 void Node::odomCallback(const nav_msgs::Odometry::ConstPtr& pose_msg)

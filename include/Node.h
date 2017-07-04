@@ -18,7 +18,7 @@ private:
     bool first_time_;
     MotionModel mm_;
 
-    ros::NodeHandle nh_;
+    ros::NodeHandle nh_, pnh_;
     ros::Subscriber odom_sub_;
 
     nav_msgs::Odometry pose_msg_;

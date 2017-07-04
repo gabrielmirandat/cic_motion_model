@@ -115,6 +115,7 @@ private:
 public:
     MotionModel();
 
+    void setAlpha(double alpha1, double alpha2, double alpha3, double alpha4);
     void setOldControl(double x, double y, double ori);
     void updateControl(double x, double y, double ori);
     void run();
