@@ -47,7 +47,7 @@ void MotionModel::sample_motion_model_odometry()
                                *(control_.getXtm1(1) - control_.getXt(1)));
     double delta_rot_2 = control_.getXt(2) - control_.getXtm1(2) - delta_rot_1;
 
-    if(isnan(delta_rot_1) or isnan(delta_trans) or isnan(delta_rot_2))
+    if(std::isnan(delta_rot_1) or std::isnan(delta_trans) or std::isnan(delta_rot_2))
         return;
 
     // traz os angulos para a faixa [-pi, pi) radianos, caso estejam fora
