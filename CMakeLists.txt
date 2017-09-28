@@ -25,7 +25,7 @@ catkin_package(
 
 include_directories(
   include
-  # /usr/include/eigen3
+  /usr/include/eigen3
   gnuplot-iostream-master
 )
 
